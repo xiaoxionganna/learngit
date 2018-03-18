@@ -1,0 +1,94 @@
+﻿切换至master失败解决方案
+Git使用之(pathspec master did not match any file(s) known to git)
+
+一 问题概述
+
+今天在工作中遇到一个问题,使用很久的一个local git repository,里面只有develop分支,那么现在想将分支切换到master分支,问题来了,在切换到master分支时:
+
+git checkout master
+1
+提示如下错误:
+
+error: pathspec 'master' did not match any file(s) known to git
+1
+二 问题解决
+
+1.首先我们看一下分支情况:
+
+git branch -a
+1
+* develop
+  remotes/composer/develop
+  remotes/composer/feature/194
+  remotes/composer/feature/198
+  remotes/composer/feature/199
+  remotes/composer/feature/200
+  remotes/composer/master
+  remotes/origin/HEAD -> origin/develop
+  remotes/origin/develop
+  remotes/origin/feature/194
+  remotes/origin/feature/198
+  remotes/origin/feature/199
+  remotes/origin/feature/200
+  remotes/origin/master
+2.如果没有看到你想要的分支,先获取所有分支:
+
+git fetch
+
+3.切换到远程master分支:
+
+git checkout origin/master
+
+提示如下:
+
+Note: checking out 'origin/master'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b new_branch_name
+
+HEAD is now at 4beea49... Merge branch 'develop' into 'master'
+
+执行git branch,效果如下:
+
+* (detached from origin/master)
+  develop
+
+5.现在我们可以从当前的detached分支切换并新建分支,可以理解为即将新创建的分支是由当前detached 分支出来的(为了为后续做准备,此处新分支就叫做master):
+
+git checkout -b master
+
+5.这时我们使用git pull会提示如下错误:
+
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=<remote>/<branch> master
+
+
+说明我们新建立的master分支还不能和远程的master分支建立追踪关系(虽然表面我们看似已经建立了master分支,但git不认为它和远程的master有任何关系),当然,您可以按照上面提示那样,通过git pull指定远程的分支和本地的分支来进行更新,但此处我们使用提示中的第二种方式,建立本地分支和远程分支的追踪关系:
+
+git branch -u origin/master master
+
+6.这时我们执行git pull来看看什么反馈:
+
+Already up-to-date.
+
+总结:其实git的人性化做的非常的完备,有时我们不要惧怕提示,而要从中找到问题的解决方法,并时常利用好:
+
+man git
+man git branch
+
+and so forth!
+
+Bye!
