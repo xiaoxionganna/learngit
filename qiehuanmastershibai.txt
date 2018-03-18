@@ -1,4 +1,4 @@
-﻿切换至master失败解决方案
+切换至master失败解决方案
 Git使用之(pathspec master did not match any file(s) known to git)
 
 一 问题概述
